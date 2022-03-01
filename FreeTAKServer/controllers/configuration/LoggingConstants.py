@@ -1,18 +1,38 @@
 import os
 from pathlib import PurePath
+
+DEFAULT_LOG_LOCATION = os.path.join(os.path.dirname(os.path.realpath(__file__)), "logs")
+
 class LoggingConstants:
-    def __init__(self, log_name = "FTS"):
-        #main logging config
-        # if on a unix type system with /var/log put the logs there
-        if os.path.isdir('/var/log'):
-            self.PARENTPATH = '/var'
-            self.LOGDIRECTORY = 'log'
-        else:
-            # determine the log path the old way under the execution path
-            self.CURRENTPATH = os.path.dirname(os.path.realpath(__file__))
-            self.CURRENTPATH = PurePath(self.CURRENTPATH)
-            self.PARENTPATH = str(self.CURRENTPATH.parents[0])
-            self.LOGDIRECTORY = 'logs'
+
+    def __init__(self, log_name = "FTS", log_file_location="/var/log"):
+
+        if os.path.isdir(log_file_location):
+            try:
+                with open("fts_temp.log","w") as f:
+                    f.write("testing")
+                self.LOGDIRECTORY = PurePath(log_file_location)
+                self.PARENTPATH = str(self.LOGDIRECTORY.parents[0])
+            except:
+                print(f"Can't write to ")
+                print(f"Setting Log Location to Default Location: {DEFAULT_LOG_LOCATION}")
+                self.LOGDIRECTORY = PurePath(DEFAULT_LOG_LOCATION)
+                self.PARENTPATH = str(self.LOGDIRECTORY.parents[0])
+
+        if not os.path.isdir(self.LOGDIRECTORY):
+            print("Creating Log Directory")
+            os.makedirs(self.LOGDIRECTORY)
+        # #main logging config
+        # # if on a unix type system with /var/log put the logs there
+        # if os.path.isdir('/var/log'):
+        #     self.PARENTPATH = '/var'
+        #     self.LOGDIRECTORY = 'log'
+        # else:
+        #     # determine the log path the old way under the execution path
+        #     self.CURRENTPATH = os.path.dirname(os.path.realpath(__file__))
+        #     self.CURRENTPATH = PurePath(self.CURRENTPATH)
+        #     self.PARENTPATH = str(self.CURRENTPATH.parents[0])
+        #     self.LOGDIRECTORY = 'logs'
 
         self.LOGFORMAT = '%(levelname)s : %(asctime)s : %(filename)s:%(lineno)d : %(message)s'
         self.LOGNAME = log_name

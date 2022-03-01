@@ -143,9 +143,12 @@ dmypy.json
 # VSCode settings
 # (They include user-specific paths)
 .vscode/
+.vs/
+.idea
 ExCheck/
 certs/
-.idea/
+.idea/*.*
+
 FreeTAKServerDataPackageFolder/
 logs/
 /controllers/configuration/FTSDataBase.db
